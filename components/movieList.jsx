@@ -5,16 +5,21 @@ import { useNavigation } from '@react-navigation/native';
 
 var {width, height} = Dimensions.get('window');
 
-export default function MovieList({title,data}) {
+export default function MovieList({title,data,hideSeeAll}) {
     let movieName = 'Ant-Man and the Wasp: Quantumania';
     const navigation = useNavigation();
     return (
       <View className="mb-8 space-y-4">
         <View className="mx-4 flex-row justify-between items-center">
             <Text className="text-white text-xl">{title}</Text>
-            <TouchableOpacity>
+            {
+                !hideSeeAll && (
+                    <TouchableOpacity>
                 <Text style={style.text} className="text-lg"> See All </Text>
             </TouchableOpacity>
+                )
+            }
+            
         </View>
         <ScrollView
             horizontal
@@ -24,7 +29,8 @@ export default function MovieList({title,data}) {
             {
                 data.map((item,index)=>{
                     return(
-                        <TouchableWithoutFeedback key={index} onPress={()=>navigation.navigate('Movie',item)}>
+                        <TouchableWithoutFeedback key={index} 
+                        onPress={()=>navigation.push('Movie',item)}>
                             <View className="space-y-1 mr-4">
                                 <Image
                                     source={require("../assets/images/moviePoster2.png")}
