@@ -5,12 +5,13 @@ import { View,Text, TouchableOpacity, Dimensions, Platform,Image } from "react-n
 import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {style, theme} from '../themes/index'
-import { ChevronLeftIcon, HeartIcon } from "react-native-heroicons/outline";
+import { ChevronLeftIcon, HeartIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MovieList from "../components/movieList";
 import Cast from "../components/cast";
+import Loading from "../components/loading";
 
 var {width, height} = Dimensions.get("window");
 const ios = Platform.OS == "ios";
@@ -21,6 +22,7 @@ export default function MovieScreen(){
     const {params: item} = useRoute();
     const navigation = useNavigation();
     const [isFavourite, toggleFavourite] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [cast, setCast] = useState([1,2,3,4,5]);
     const [similaeMovie, setSimilaeMovie] = useState([1,2,3,4,5])
     useEffect(()=>{
@@ -34,27 +36,33 @@ export default function MovieScreen(){
                     <SafeAreaView className={"absolute z-20 w-full flex-row justify-between items-start px-4"+topMargin}>
                         <TouchableOpacity
                             style={style.background}   
-                            className="rounded-xl p-1"
+                            className="rounded-xl p-1 ml-3"
                             onPress={()=>navigation.goBack()}>
                             <ChevronLeftIcon size="28" strokeWidth={2.5} color="white"/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>toggleFavourite(!isFavourite)}>
-                            <HeartIcon size="35" color={isFavourite ? theme.background: "white"}/>
+                        <TouchableOpacity onPress={()=>toggleFavourite(!isFavourite)} className="mr-3">
+                            <HeartIcon size="35" color={isFavourite ? "red": "white"}/>
                         </TouchableOpacity>
                     </SafeAreaView>
-                    <View>
-                        <Image
-                            source={require('../assets/images/moviePoster2.png')}
-                            style={{width,height:height*0.55}}
-                        />
-                        <LinearGradient
-                            colors={['transparent','rgba(23,23,23,0.8)','rgba(23,23,23,1)']}
-                            style={{width, height:height*0.40}}
-                            start={{x:0.5,y:0}}
-                            end={{x:0.5,y:1}}
-                            className="absolute bottom-0"
+                    {
+                        loading? (
+                            <Loading/>
+                        ):(
+                        <View>
+                            <Image
+                                source={require('../assets/images/moviePoster2.png')}
+                                style={{width,height:height*0.55}}
                             />
-                    </View>
+                            <LinearGradient
+                                colors={['transparent','rgba(23,23,23,0.8)','rgba(23,23,23,1)']}
+                                style={{width, height:height*0.40}}
+                                start={{x:0.5,y:0}}
+                                end={{x:0.5,y:1}}
+                                className="absolute bottom-0"
+                                />
+                                
+                        </View>)
+                    }
                 </View>
                 <View style={{marginTop:-height*0.09}} className="space-y-3">
                     {/* Movie Name */}
