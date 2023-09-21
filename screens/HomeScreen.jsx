@@ -8,7 +8,8 @@ import MovieList from "../components/movieList";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Loading from "../components/loading";
-
+import { useEffect } from "react";
+import { fetchTrandingMovie } from "../api/moviedb";
 const ios = Platform.OS == "ios";
 
 export default function HomeScreen(){
@@ -18,6 +19,16 @@ export default function HomeScreen(){
     const [topRated, setTopRated] = useState([1,2,3]);
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
+
+    useEffect(()=>{
+        getTrandingMovie();
+    },[])
+
+    const getTrandingMovie = async ()=>{
+        const data = await fetchTrandingMovie();
+        console.log(data.title);
+    }
+
     return( 
         <View className="flex-1 bg-neutral-800">
             <SafeAreaView className={ios ? "-mb-2":"mb-3"}>
